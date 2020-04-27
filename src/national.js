@@ -1,4 +1,4 @@
-export class NationalData {
+export class NationalDataFunctions {
   constructor(totalTests, totalCases, totalDead, totalRecovered, totalPopulation) {
     this.totalTests = totalTests;
     this.totalCases = totalCases;
