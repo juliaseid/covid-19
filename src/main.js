@@ -4,7 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { statesData } from './JSON/us-states.js';
+/* import { mapStatesOverlay } from './JSON/us-states.js'; */
+import { StateService } from './states-service.js';
 
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -13,7 +14,6 @@ L.Icon.Default.mergeOptions({
   iconUrl: require('leaflet/dist/images/marker-icon.png'),
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
-
 
 
 $(document).ready(function() {
@@ -47,7 +47,7 @@ $(document).ready(function() {
 
     layer.setStyle({
       weight: 5,
-      color: '#666',
+      color: '#000',
       dashArray: '',
       fillOpacity: 0.7
     });
@@ -61,22 +61,32 @@ $(document).ready(function() {
     geoJsonLayer.resetStyle(e.target);
   }
 
-  
+  function displayTotalPositive(e) {
+    console.log(e.target.feature.properties.totalCases);
+  }
 
   function onEachFeature(feature, layer) {
     layer.on({
       mouseover: highlightFeature,
       mouseout: resetHighlight,
-      /* click: zoomToFeature */
+      click: displayTotalPositive
     });
   }
 
   
+  (async () => {
+    let stateService = new StateService();
+    await stateService.populateStateData();
+    geoJsonLayer = L.geoJson(stateService.geoJsonData, {
+      style: style,
+      onEachFeature: onEachFeature
+    }).addTo(map);
+    
+  })();
 
-  geoJsonLayer = L.geoJson(statesData, {
-    style: style,
-    onEachFeature: onEachFeature
-  }).addTo(map);
+  
+  
+  
 
   
 
