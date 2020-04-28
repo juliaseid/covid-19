@@ -1,5 +1,6 @@
-state-codes {
-AK:0
-AL:1
-
+const stateCodes = {
+AK:0,
+AL:1,
+AR:2,
+AZ:3,
 }
