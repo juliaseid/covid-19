@@ -20,6 +20,7 @@ $(document).ready(function() {
   let map = L.map('map').setView([37.8, -96], 4);
   let geoJsonLayer;
   let info = L.control();
+  let stateService = new StateService();
   
 
   L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + process.env.ACCESS_TOKEN, {
@@ -82,23 +83,24 @@ $(document).ready(function() {
     info.update();
   }
 
-  function displayTotalPositive(e) {
-    console.log(e.target.feature.properties.totalCases);
+  function getStateDataByID(e) {
+    let stateId = e.target.feature.id;
+    const covidData = stateService.covidData;
+    let stateData = covidData.find(function (state) {
+      return state.fips === stateId;
+    });
+    console.log(stateData.death);
   }
 
   function onEachFeature(feature, layer) {
     layer.on({
       mouseover: highlightFeature,
       mouseout: resetHighlight,
-      click: displayTotalPositive
+      click: getStateDataByID
     });
   }
 
-  
-
-  
   (async () => {
-    let stateService = new StateService();
     await stateService.populateStateData();
     geoJsonLayer = L.geoJson(stateService.geoJsonData, {
       style: style,
