@@ -1,8 +1,8 @@
 {
-  "name": "COVID-by-State",
+  "name": "COVIDbyState",
   "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "description": "covidbystate",
+  "main": "./../src/main.js",
   "scripts": {
     "build": "webpack --mode development",
     "start": "npm run build; webpack-dev-server --open --mode development",
