@@ -1,0 +1,26 @@
+body {
+  background-color: #efefef;
+  background-image: url(../img/white_carbonfiber.jpg);
+  font-family: Roboto;
+}
+
+h1 {
+  text-align: center;
+  font-family: Source Serif Pro;
+  color: black;
+  font-size: 80px;
+  padding-top: 30px;
+  padding-bottom: 35px;
+  background-color:rgba(255, 0, 0, 0.384);
+}
+
+#left, #right {
+  background-color:rgba(255, 0, 0, 0.384);
+	position: fixed;
+	}
+	#left, #right {
+		top: 0; bottom: 0;
+		width: 40px;
+		}
+		#left { left: 0; }
+		#right { right: 0; }
