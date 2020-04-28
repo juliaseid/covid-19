@@ -19,6 +19,7 @@ L.Icon.Default.mergeOptions({
 $(document).ready(function() {
   let map = L.map('map').setView([37.8, -96], 4);
   let geoJsonLayer;
+  let info = L.control();
   
 
   L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + process.env.ACCESS_TOKEN, {
@@ -42,6 +43,23 @@ $(document).ready(function() {
     };
   }
 
+  
+
+  // eslint-disable-next-line no-unused-vars
+  info.onAdd = function(map) {
+    this._div = L.DomUtil.create('div', 'info');
+    this.update();
+    return this._div;
+  };
+
+  info.update = function(props) {
+    this._div.innerHTML = '<h4>US COVID-19 Positive Test Cases</h4>' + (props ?
+      '<b>' + props.name + '</b><br />' + props.totalCases + ' positive cases'
+      : 'Hover over a state to see results');
+  };
+
+  info.addTo(map);
+
   function highlightFeature(e) {
     let layer = e.target;
 
@@ -55,10 +73,13 @@ $(document).ready(function() {
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
       layer.bringToFront();
     }
+
+    info.update(layer.feature.properties);
   }
 
   function resetHighlight(e) {
     geoJsonLayer.resetStyle(e.target);
+    info.update();
   }
 
   function displayTotalPositive(e) {
@@ -72,6 +93,8 @@ $(document).ready(function() {
       click: displayTotalPositive
     });
   }
+
+  
 
   
   (async () => {
