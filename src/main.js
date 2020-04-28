@@ -8,6 +8,7 @@ import { positivesPer100Tests } from './../src/data-functions.js';
 import { recoveredPerConfirmed } from './../src/data-functions.js';
 import { deathsPerConfirmed } from './../src/data-functions.js';
 import { COVIDService } from './../src/covidService.js';
+import { PopulationService } from './../src/populationService.js';
 
 function getCOVIDElements (response) {
   let totalCases;
@@ -19,27 +20,37 @@ function getCOVIDElements (response) {
     totalRecovered = response[0].recovered;
     totalDead = response[0].death;
     totalTests = response[0].totalTestResults; 
+    $("#putDataHere").text(`Total Cases: ${totalCases}  Total Recovered: ${totalRecovered}  Total Dead: ${totalDead}  Total Tests: ${totalTests}`);
+    return (totalCases, totalRecovered, totalDead, totalTests);
   }
-  $("#putDataHere").text(response);
-  $("#putDataHere").text(`Total Cases: ${totalCases}  Total Recovered: ${totalRecovered}  Total Dead: ${totalDead}  Total Tests: ${totalTests}`);
-  return (totalCases, totalRecovered, totalDead, totalTests);
+  else {
+    alert("We're sorry!  We have nothing to show you right now!");
+  }
+}
+
+function getPopulations (response) {
+  let totalNationalPop;
+  if (response) {
+    totalNationalPop = response[1][0];
+  }
+  return totalNationalPop;
 }
 
 $(document).ready(function () {
   (async () => {
     let covidService = new COVIDService;
+    let populationService = new PopulationService;
+    const popResponse = await populationService.getNationalPopulationData();
     const nationalResponse = await covidService.getNationalData();
     const stationalResponse = await covidService.getStateData();
-    let natResponse = getCOVIDElements(nationalResponse);
-    //console.log(nationalResponse);
-    let statResponse = getCOVIDElements(stationalResponse);
-    console.log(stationalResponse);
+    let nationalData = getCOVIDElements(nationalResponse);
+    let natPop = getPopulations(popResponse);
+    // console.log(testsPer100K(natResponse[3], natPop));
+    console.log(nationalData);
+    console.log(natPop);
+    // let statResponse = getCOVIDElements(stationalResponse);
+    // console.log(statResponse);
 
-    // console.log(stateResponse.positive + "positive<br>" + stateResponse.recovered + "recovered<br>" + stateResponse.dead + "dead<br>" + stateResponse.totalCases + "total cases");   
-  
-  
+
   })();
-
-
-
 });
