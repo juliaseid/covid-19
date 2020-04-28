@@ -86,9 +86,7 @@ $(document).ready(function() {
   function getStateDataByID(e) {
     let stateId = e.target.feature.id;
     const covidData = stateService.covidData;
-    let stateData = covidData.find(function (state) {
-      return state.fips === stateId;
-    });
+    let stateData = covidData.find(state => state.fips === stateId); 
     console.log(stateData.death);
   }
 
