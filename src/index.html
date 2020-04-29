@@ -8,20 +8,56 @@
 <body>
   <h1>Corona Virus Tracker</h1>
   <div class="container">
-    <div id="nationalData">
-      <h3>National Data</h3>
-      <p id=putDataHere></p>
+    <!-- Rows & Columns for Graphs -->
+
+    <!-- COLUMN for simple data that doesn't need a graph, ie number of infections, current infection rate etc-->
+    <div class="row">
+      <div class="col-md-2">
+        <div class="well">
+          <div id="nationalData">
+            <h3>National Data</h3>
+            <ul>
+              <li id="nationalInfections">Total Number of U.S. Cases:</li>
+              <li id="nationalInfectionRate">National Infection Rate:</li>
+            </ul>
+          </div>
+          <div id="stateData">
+            <h3>State Data</h3>
+            <div id="putDataHere"></div>
+            <ul>
+              <li id="stateInfections">Total Number of Cases in State:</li>
+              <li id="stateInfectionRate">State Infection Rate:</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    <br>
+      <!-- MAP -->
+      <div class="col-md-5">
+          <div id="map">
+            <!-- Map goes here -->
+          </div>
+      </div>
+    <br>
+      <!-- GRAPHS -->
+      <div class="col-md-5">
+        <div class="well">
+          <div class="graphBox" id="graph1">
+            <h3>GRAPH 1 HERE</h3>
+          </div>
+          <div class="graphBox" id="graph2">
+            <h3>GRAPH 2 HERE</h3>
+          </div>
+          <div class="graphBox" id="graph3">
+            <h3>GRAPH 3 HERE</h3>
+          </div>
+        </div>
+      </div>
     </div>
-    <div id="map">
+  <br>
 
-    </div>
-
-<br>
-
-    <div id = "stateData">
-
-    </div>
-
+    
+    <!-- CSS Styling divs below -->
     <div id="left"></div>
     <div id="right"></div>
 
