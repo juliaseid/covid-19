@@ -3,7 +3,8 @@ import { mapStatesOverlay } from './JSON/us-states.js';
 export class StateService {
   constructor() {
     this.geoJsonData;
-    this.covidData;
+    this.currentData;
+    this.historicalData;
   }
   
   
@@ -19,7 +20,7 @@ export class StateService {
   
   async populateStateData() { 
     const response = await this.getStatesData();
-    this.covidData = response;
+    this.currentData = response;
     const { features } = mapStatesOverlay;
     
     const mapData = features.map(state => {
@@ -37,6 +38,20 @@ export class StateService {
       ...mapStatesOverlay,
       features: mapData,
     };
+  }
+
+  async getHistoricalStateData() {
+    try {
+      let response = await fetch("https://covidtracking.com/api/v1/states/daily.json");
+      return response.json();
+    } catch(error) {
+      return error;
+    }
+  }
+
+  async setHisotricalStateData() {
+    const response = await this.getHistoricalStateData();
+    this.historicalData = response;
   }
       
 }
