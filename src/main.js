@@ -2,43 +2,36 @@ import $ from 'jquery';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
-import { testsPer100K } from './../src/data-functions.js';
-import { casesPer100K } from './../src/data-functions.js';
-import { positivesPer100Tests } from './../src/data-functions.js';
-import { recoveredPerConfirmed } from './../src/data-functions.js';
-import { deathsPerConfirmed } from './../src/data-functions.js';
+import { DataFunctions } from './../src/data-functions.js';
 import { COVIDService } from './../src/covidService.js';
 import { PopulationService } from './../src/populationService.js';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-
+import L from './../src/leaflet/leaflet.js';
+import './../src/leaflet/leaflet.css';
 import { StateService } from './states-service.js';
 import { HistoricalDataByState } from './historical-data.js';
 import { Chart } from './charts.js';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-  iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+  iconRetinaUrl: require('./../src/leaflet/images/marker-icon-2x.png'),
+  iconUrl: require('./../src/leaflet/images/marker-icon.png'),
+  shadowUrl: require('./../src/leaflet/images/marker-shadow.png'),
 });
 
-function getCOVIDElements (response) {
-  let totalCases;
-  let totalRecovered;
-  let totalDead;
-  let totalTests;
-  if (response) {
-    totalCases = response[0].positive;
-    totalRecovered = response[0].recovered;
-    totalDead = response[0].death;
-    totalTests = response[0].totalTestResults; 
-    $("#putDataHere").text(`Total Cases: ${totalCases}  Total Recovered: ${totalRecovered}  Total Dead: ${totalDead}  Total Tests: ${totalTests}`);
-    return (totalCases, totalRecovered, totalDead, totalTests);
+function getCOVIDElements (response1, response2) { 
+  let dataFunctions;
+  if (response1) {
+    if (response2) {
+      dataFunctions = new DataFunctions(response1[0].positive, response1[0].recovered, response1[0].death, response1[0].totalTestResults, getPopulations(response2));
+    }
+    else {
+      dataFunctions = "Sorry, no population data available!";
+    } 
   }
   else {
-    alert("We're sorry!  We have nothing to show you right now!");
+    dataFunctions = "We're sorry!  We have nothing to show you right now!";
   }
+  return dataFunctions;
 }
 
 function getPopulations (response) {
@@ -46,7 +39,7 @@ function getPopulations (response) {
   if (response) {
     totalNationalPop = response[1][0];
   }
-  return totalNationalPop;
+  return +(totalNationalPop);
 }
 
 $(document).ready(function () {
@@ -54,16 +47,18 @@ $(document).ready(function () {
     let covidService = new COVIDService;
     let populationService = new PopulationService;
     const popResponse = await populationService.getNationalPopulationData();
+    const statePopResponse = await populationService.getStatePopulationData();
     const nationalResponse = await covidService.getNationalData();
     const stationalResponse = await covidService.getStateData();
-    let nationalData = getCOVIDElements(nationalResponse);
-    let natPop = getPopulations(popResponse);
-    // console.log(testsPer100K(natResponse[3], natPop));
+    let nationalData = getCOVIDElements(nationalResponse, popResponse);
+    //let stateCOVID = stationalResponse.filter(state => state.fips === stateId)//needs to be amended to work w/ specifics of our API & stuff
+    //let statePop = statePopResponse.filter( blah blah => )//fix this
+
     console.log(nationalData);
-    console.log(natPop);
-    // let statResponse = getCOVIDElements(stationalResponse);
-    // console.log(statResponse);
+    console.log(stateData);
   })();
+
+  
   
   let map = L.map('map').setView([37.8, -96], 4);
   let geoJsonLayer;
@@ -72,10 +67,10 @@ $(document).ready(function () {
   let chart = new Chart();
   
 
-  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + process.env.ACCESS_TOKEN, {
+  L.tileLayer(`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=${process.env.ACCESS_TOKEN}`, {
     maxZoom: 6,
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			`<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ` +
 			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     id: 'mapbox/light-v9',
     tileSize: 512,
@@ -93,9 +88,6 @@ $(document).ready(function () {
     };
   }
 
-  
-
-  // eslint-disable-next-line no-unused-vars
   info.onAdd = function() {
     this._div = L.DomUtil.create('div', 'info');
     this.update();
@@ -134,18 +126,8 @@ $(document).ready(function () {
 
   function getStateDataByID(e) {
     let stateId = e.target.feature.id;
-    /* const currentData = stateService.currentData;
-    let stateData = currentData.find(state => state.fips === stateId); 
-    console.log(stateData.death); */
     const allhistoricalData = stateService.historicalData;
     let stateHistoricalData = allhistoricalData.filter(state => state.fips === stateId);
-    //console.log(stateHistoricalData);
-    /* const allDeaths = stateHistoricalData.map(state => {
-      return {
-        date: state.date,
-        deaths: state.death 
-      };
-    }); */
     let histData = new HistoricalDataByState(stateHistoricalData);
     histData.getDeathsOverTime();
     console.log(histData.deathsOverTime);
