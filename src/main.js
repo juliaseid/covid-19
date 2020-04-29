@@ -9,6 +9,18 @@ import { recoveredPerConfirmed } from './../src/data-functions.js';
 import { deathsPerConfirmed } from './../src/data-functions.js';
 import { COVIDService } from './../src/covidService.js';
 import { PopulationService } from './../src/populationService.js';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+import { StateService } from './states-service.js';
+
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
 
 function getCOVIDElements (response) {
   let totalCases;
@@ -50,24 +62,8 @@ $(document).ready(function () {
     console.log(natPop);
     // let statResponse = getCOVIDElements(stationalResponse);
     // console.log(statResponse);
-
-
   })();
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-/* import { mapStatesOverlay } from './JSON/us-states.js'; */
-import { StateService } from './states-service.js';
-
-
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-  iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
-});
-
-
-$(document).ready(function() {
+  
   let map = L.map('map').setView([37.8, -96], 4);
   let geoJsonLayer;
   let info = L.control();
@@ -158,11 +154,4 @@ $(document).ready(function() {
     
   })();
 
-  
-  
-  
-
-  
-
-  
 });
