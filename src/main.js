@@ -2,39 +2,36 @@ import $ from 'jquery';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
-import { testsPer100K } from './../src/data-functions.js';
-import { casesPer100K } from './../src/data-functions.js';
-import { positivesPer100Tests } from './../src/data-functions.js';
-import { recoveredPerConfirmed } from './../src/data-functions.js';
-import { deathsPerConfirmed } from './../src/data-functions.js';
+import { DataFunctions } from './../src/data-functions.js';
 import { COVIDService } from './../src/covidService.js';
 import { PopulationService } from './../src/populationService.js';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-
+import L from './../src/leaflet/leaflet.js';
+import './../src/leaflet/leaflet.css';
 import { StateService } from './states-service.js';
 import { HistoricalDataByState } from './historical-data.js';
 
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-  iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+  iconRetinaUrl: require('./../src/leaflet/images/marker-icon-2x.png'),
+  iconUrl: require('./../src/leaflet/images/marker-icon.png'),
+  shadowUrl: require('./../src/leaflet/images/marker-shadow.png'),
 });
 
-function getCOVIDElements (response) {
-  let totalCases;
-  let totalRecovered;
-  let totalDead;
-  let totalTests;
-  if (response) {
-    totalCases = response[0].positive;
-    totalRecovered = response[0].recovered;
-    totalDead = response[0].death;
-    totalTests = response[0].totalTestResults; 
-    $("#putDataHere").text(`Total Cases: ${totalCases}  Total Recovered: ${totalRecovered}  Total Dead: ${totalDead}  Total Tests: ${totalTests}`);
-    return (totalCases, totalRecovered, totalDead, totalTests);
+function getCOVIDElements (response1, response2) { // getting mad about identifier already being declared
+  response1 = new DataFunctions;
+  let response2;
+  if (response1) {
+    if (response2) {
+    this.totalCases = response1[0].positive;
+    this.totalRecovered = response1[0].recovered;
+    this.totalDead = response1[0].death;
+    this.totalTests = response1[0].totalTestResults; 
+    this.totalPopulation = getPopulations(response2);
+    }
+    else {
+      alert("Sorry, no population data available!");
+    } 
   }
   else {
     alert("We're sorry!  We have nothing to show you right now!");
@@ -56,14 +53,17 @@ $(document).ready(function () {
     const popResponse = await populationService.getNationalPopulationData();
     const nationalResponse = await covidService.getNationalData();
     const stationalResponse = await covidService.getStateData();
-    let nationalData = getCOVIDElements(nationalResponse);
-    let natPop = getPopulations(popResponse);
+    let nationalData = getCOVIDElements(nationalResponse, popResponse);
+    // let natPop = getPopulations(popResponse);
+    // testsPer100K()
     // console.log(testsPer100K(natResponse[3], natPop));
     console.log(nationalData);
-    console.log(natPop);
+    // console.log(natPop);
     // let statResponse = getCOVIDElements(stationalResponse);
     // console.log(statResponse);
   })();
+
+  
   
   let map = L.map('map').setView([37.8, -96], 4);
   let geoJsonLayer;

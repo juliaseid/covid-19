@@ -11,7 +11,7 @@
     "node": true
   },
   "rules": {
-      "semi": 1,
+      "semi": "none", //Look up ways to isolate and ignore a specific file error
       "indent": ["warn", 2],
       "no-console": "warn",
       "no-debugger": "warn",
