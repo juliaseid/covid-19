@@ -6,6 +6,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 /* import { mapStatesOverlay } from './JSON/us-states.js'; */
 import { StateService } from './states-service.js';
+import { HistoricalDataByState } from './historical-data.js';
 
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -88,16 +89,17 @@ $(document).ready(function() {
     /* const currentData = stateService.currentData;
     let stateData = currentData.find(state => state.fips === stateId); 
     console.log(stateData.death); */
-    const historicalData = stateService.historicalData;
-    let stateHistoricalData = historicalData.filter(state => state.fips === stateId);
+    const allhistoricalData = stateService.historicalData;
+    let stateHistoricalData = allhistoricalData.filter(state => state.fips === stateId);
     //console.log(stateHistoricalData);
-    const allDeaths = stateHistoricalData.map(state => {
+    /* const allDeaths = stateHistoricalData.map(state => {
       return {
         date: state.date,
         deaths: state.death 
       };
-    });
-    console.log(allDeaths);
+    }); */
+    let histData = new HistoricalDataByState(stateHistoricalData);
+    console.log(histData.getDeathsOverTime());
   }
 
   function onEachFeature(feature, layer) {
