@@ -47,7 +47,7 @@ $(document).ready(function() {
   
 
   // eslint-disable-next-line no-unused-vars
-  info.onAdd = function(map) {
+  info.onAdd = function() {
     this._div = L.DomUtil.create('div', 'info');
     this.update();
     return this._div;
