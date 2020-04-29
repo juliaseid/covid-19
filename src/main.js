@@ -13,6 +13,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import { StateService } from './states-service.js';
+import { HistoricalDataByState } from './historical-data.js';
 
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -132,9 +133,21 @@ $(document).ready(function () {
 
   function getStateDataByID(e) {
     let stateId = e.target.feature.id;
-    const covidData = stateService.covidData;
-    let stateData = covidData.find(state => state.fips === stateId); 
-    console.log(stateData.death);
+    /* const currentData = stateService.currentData;
+    let stateData = currentData.find(state => state.fips === stateId); 
+    console.log(stateData.death); */
+    const allhistoricalData = stateService.historicalData;
+    let stateHistoricalData = allhistoricalData.filter(state => state.fips === stateId);
+    //console.log(stateHistoricalData);
+    /* const allDeaths = stateHistoricalData.map(state => {
+      return {
+        date: state.date,
+        deaths: state.death 
+      };
+    }); */
+    let histData = new HistoricalDataByState(stateHistoricalData);
+    histData.getDeathsOverTime();
+    console.log(histData.deathsOverTime);
   }
 
   function onEachFeature(feature, layer) {
@@ -147,6 +160,7 @@ $(document).ready(function () {
 
   (async () => {
     await stateService.populateStateData();
+    await stateService.setHisotricalStateData();
     geoJsonLayer = L.geoJson(stateService.geoJsonData, {
       style: style,
       onEachFeature: onEachFeature
