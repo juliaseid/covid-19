@@ -23,11 +23,6 @@ function getCOVIDElements (response1, response2) {
   if (response1) {
     if (response2) {
       dataFunctions = new DataFunctions(response1[0].positive, response1[0].recovered, response1[0].death, response1[0].totalTestResults, getPopulations(response2));
-    // this.totalCases = response1[0].positive;
-    // this.totalRecovered = response1[0].recovered;
-    // this.totalDead = response1[0].death;
-    // this.totalTests = response1[0].totalTestResults; 
-    // this.totalPopulation = getPopulations(response2);
     }
     else {
       dataFunctions = "Sorry, no population data available!";
@@ -44,7 +39,7 @@ function getPopulations (response) {
   if (response) {
     totalNationalPop = response[1][0];
   }
-  return totalNationalPop;
+  return +(totalNationalPop);
 }
 
 $(document).ready(function () {
@@ -52,15 +47,15 @@ $(document).ready(function () {
     let covidService = new COVIDService;
     let populationService = new PopulationService;
     const popResponse = await populationService.getNationalPopulationData();
+    const statePopResponse = await populationService.getStatePopulationData();
     const nationalResponse = await covidService.getNationalData();
     const stationalResponse = await covidService.getStateData();
     let nationalData = getCOVIDElements(nationalResponse, popResponse);
-    // let natPop = getPopulations(popResponse);
-    // testsPer100K()
+    //let stateCOVID = stationalResponse.filter(state => state.fips === stateId)//needs to be amended to work w/ specifics of our API & stuff
+    //let statePop = statePopResponse.filter( blah blah => )//fix this
+
     console.log(nationalData);
-    // console.log(natPop);
-    // let statResponse = getCOVIDElements(stationalResponse);
-    // console.log(statResponse);
+    console.log(stateData);
   })();
 
   
@@ -92,9 +87,6 @@ $(document).ready(function () {
     };
   }
 
-  
-
-  // eslint-disable-next-line no-unused-vars
   info.onAdd = function() {
     this._div = L.DomUtil.create('div', 'info');
     this.update();
@@ -133,18 +125,8 @@ $(document).ready(function () {
 
   function getStateDataByID(e) {
     let stateId = e.target.feature.id;
-    /* const currentData = stateService.currentData;
-    let stateData = currentData.find(state => state.fips === stateId); 
-    console.log(stateData.death); */
     const allhistoricalData = stateService.historicalData;
     let stateHistoricalData = allhistoricalData.filter(state => state.fips === stateId);
-    //console.log(stateHistoricalData);
-    /* const allDeaths = stateHistoricalData.map(state => {
-      return {
-        date: state.date,
-        deaths: state.death 
-      };
-    }); */
     let histData = new HistoricalDataByState(stateHistoricalData);
     histData.getDeathsOverTime();
     console.log(histData.deathsOverTime);
