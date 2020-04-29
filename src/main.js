@@ -99,7 +99,7 @@ $(document).ready(function() {
       };
     }); */
     let histData = new HistoricalDataByState(stateHistoricalData);
-    console.log(histData.getDeathsOverTime());
+    console.log(histData.callAllMethods());
   }
 
   function onEachFeature(feature, layer) {
