@@ -14,7 +14,7 @@ import 'leaflet/dist/leaflet.css';
 
 import { StateService } from './states-service.js';
 import { HistoricalDataByState } from './historical-data.js';
-
+import { Chart } from './charts.js';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -69,6 +69,7 @@ $(document).ready(function () {
   let geoJsonLayer;
   let info = L.control();
   let stateService = new StateService();
+  let chart = new Chart();
   
 
   L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + process.env.ACCESS_TOKEN, {
@@ -148,6 +149,7 @@ $(document).ready(function () {
     let histData = new HistoricalDataByState(stateHistoricalData);
     histData.getDeathsOverTime();
     console.log(histData.deathsOverTime);
+    chart.infectionChart();
   }
 
   function onEachFeature(feature, layer) {
