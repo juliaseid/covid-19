@@ -22,7 +22,7 @@ function getCOVIDElements (response1, response2) {
   let dataFunctions;
   if (response1) {
     if (response2) {
-      dataFunctions = new DataFunctions(response1[0].positive, response1[0].recovered, response1[0].death, response1[0].totalTestResults, getPopulations(response2));
+      dataFunctions = new DataFunctions(response1[0].positive, response1[0].recovered, response1[0].death, response1[0].totalTestResults, getNationalPopulation(response2));
     }
     else {
       dataFunctions = "Sorry, no population data available!";
@@ -34,12 +34,18 @@ function getCOVIDElements (response1, response2) {
   return dataFunctions;
 }
 
-function getPopulations (response) {
-  let totalNationalPop;
+function getNationalPopulation(response) {
+  let totalNatPop;
   if (response) {
-    totalNationalPop = response[1][0];
+    totalNatPop = response[1][0];
   }
-  return +(totalNationalPop);
+  return +(totalNatPop);
+}
+
+function getStatePopulation(census) {
+  let totalStatePop;
+  totalStatePop = census[0];
+  return +(totalStatePop);
 }
 
 $(document).ready(function () {
@@ -47,15 +53,24 @@ $(document).ready(function () {
     let covidService = new COVIDService;
     let populationService = new PopulationService;
     const popResponse = await populationService.getNationalPopulationData();
-    const statePopResponse = await populationService.getStatePopulationData();
+    const allStatesPopResponse = await populationService.getStatePopulationData();
     const nationalResponse = await covidService.getNationalData();
-    const stationalResponse = await covidService.getStateData();
+    const allStatesCOVIDResponse = await covidService.getStateData();
     let nationalData = getCOVIDElements(nationalResponse, popResponse);
-    //let stateCOVID = stationalResponse.filter(state => state.fips === stateId)//needs to be amended to work w/ specifics of our API & stuff
-    //let statePop = statePopResponse.filter( blah blah => )//fix this
-
+    allStatesPopResponse.forEach(census => { // how do we call this??
+      let allStatesDataPackages = [];
+      let stateDataPackage;
+      allStatesCOVIDResponse.forEach(state => {
+        if (state["fips"]===census[1]) {
+          stateDataPackage = [getCOVIDElements(state, getStatePopulation(census)), state["fips"]];
+        }
+        return stateDataPackage;
+      });
+      allStatesDataPackages.push(stateDataPackage)
+    });
+   
     console.log(nationalData);
-    console.log(stateData);
+
   })();
 
   
