@@ -18,24 +18,25 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('./../src/leaflet/images/marker-shadow.png'),
 });
 
-function getCOVIDElements (response1, response2) { // getting mad about identifier already being declared
-  response1 = new DataFunctions;
-  let response2;
+function getCOVIDElements (response1, response2) { 
+  let dataFunctions;
   if (response1) {
     if (response2) {
-    this.totalCases = response1[0].positive;
-    this.totalRecovered = response1[0].recovered;
-    this.totalDead = response1[0].death;
-    this.totalTests = response1[0].totalTestResults; 
-    this.totalPopulation = getPopulations(response2);
+      dataFunctions = new DataFunctions(response1[0].positive, response1[0].recovered, response1[0].death, response1[0].totalTestResults, getPopulations(response2));
+    // this.totalCases = response1[0].positive;
+    // this.totalRecovered = response1[0].recovered;
+    // this.totalDead = response1[0].death;
+    // this.totalTests = response1[0].totalTestResults; 
+    // this.totalPopulation = getPopulations(response2);
     }
     else {
-      alert("Sorry, no population data available!");
+      dataFunctions = "Sorry, no population data available!";
     } 
   }
   else {
-    alert("We're sorry!  We have nothing to show you right now!");
+    dataFunctions = "We're sorry!  We have nothing to show you right now!";
   }
+  return dataFunctions;
 }
 
 function getPopulations (response) {
@@ -56,7 +57,6 @@ $(document).ready(function () {
     let nationalData = getCOVIDElements(nationalResponse, popResponse);
     // let natPop = getPopulations(popResponse);
     // testsPer100K()
-    // console.log(testsPer100K(natResponse[3], natPop));
     console.log(nationalData);
     // console.log(natPop);
     // let statResponse = getCOVIDElements(stationalResponse);
@@ -71,10 +71,10 @@ $(document).ready(function () {
   let stateService = new StateService();
   
 
-  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + process.env.ACCESS_TOKEN, {
+  L.tileLayer(`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=${process.env.ACCESS_TOKEN}`, {
     maxZoom: 6,
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			`<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ` +
 			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     id: 'mapbox/light-v9',
     tileSize: 512,
