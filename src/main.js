@@ -85,9 +85,19 @@ $(document).ready(function() {
 
   function getStateDataByID(e) {
     let stateId = e.target.feature.id;
-    const covidData = stateService.covidData;
-    let stateData = covidData.find(state => state.fips === stateId); 
-    console.log(stateData.death);
+    /* const currentData = stateService.currentData;
+    let stateData = currentData.find(state => state.fips === stateId); 
+    console.log(stateData.death); */
+    const historicalData = stateService.historicalData;
+    let stateHistoricalData = historicalData.filter(state => state.fips === stateId);
+    //console.log(stateHistoricalData);
+    const allDeaths = stateHistoricalData.map(state => {
+      return {
+        date: state.date,
+        deaths: state.death 
+      };
+    });
+    console.log(allDeaths);
   }
 
   function onEachFeature(feature, layer) {
@@ -100,6 +110,7 @@ $(document).ready(function() {
 
   (async () => {
     await stateService.populateStateData();
+    await stateService.setHisotricalStateData();
     geoJsonLayer = L.geoJson(stateService.geoJsonData, {
       style: style,
       onEachFeature: onEachFeature
