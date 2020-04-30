@@ -42,6 +42,13 @@ function getPopulations (response) {
   return +(totalNationalPop);
 }
 
+function displayNationalData(obj) {
+  $('.ttlNationalInfections').text(obj.totalCases);
+  $('.ttlNationalDead').text(obj.totalDead);
+  $('.ttlNationalRecovered').text(obj.totalRecovered);
+  $('.ttlNationalTests').text(obj.totalTests);
+}
+
 $(document).ready(function () {
   (async () => {
     let covidService = new COVIDService;
@@ -55,7 +62,8 @@ $(document).ready(function () {
     //let statePop = statePopResponse.filter( blah blah => )//fix this
 
     console.log(nationalData);
-    console.log(stateData);
+    displayNationalData(nationalData);
+   // console.log(stateData);
   })();
 
   
@@ -64,7 +72,6 @@ $(document).ready(function () {
   let geoJsonLayer;
   let info = L.control();
   let stateService = new StateService();
-  let chart = new Chart();
   
 
   L.tileLayer(`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=${process.env.ACCESS_TOKEN}`, {
@@ -131,7 +138,10 @@ $(document).ready(function () {
     let histData = new HistoricalDataByState(stateHistoricalData);
     histData.getDeathsOverTime();
     console.log(histData.deathsOverTime);
+    let chart = new Chart(histData.deathsOverTime);
     chart.infectionChart();
+    chart.testRateChart();
+    chart.positiveTestChart();
   }
 
   function onEachFeature(feature, layer) {

@@ -1,6 +1,9 @@
 import CanvasJS from './canvasjs.min.js';
   
 export class Chart {
+  constructor(deathOverTimeData) {
+    this.deathOverTimeData = deathOverTimeData;
+  }
 
   infectionChart() {
     var InfectionRate = new CanvasJS.Chart("infectionRateChart", {
@@ -8,15 +11,16 @@ export class Chart {
       theme: "light1",
       backgroundColor: 'lightgrey',
       title:{
-        text: "Infection Rate Over Time",
+        text: "Total Deaths Over Time",
         fontFamily: "tahoma",
       },
       axisX:{
         title: "Date",
         intervalType: "month",
+        valueFormatString: "YYYY-MM-DD",
       },
       axisY:{
-        title: "Cases Per 100,000",
+        title: "Total Deaths",
         includeZero: false,
       },
       data: [{        
@@ -32,38 +36,16 @@ export class Chart {
         showInLegend: true,
         indexLabelFontSize: 12,
         dataPoints: [
-          { x: new Date(2020, 1, 15),y: 1 , indexLabel: "-first case",  markerType: "cross" },
-          { x: new Date(2020, 1, 22),y: 2 },
-          { x: new Date(2020, 1, 29),y: 4 },
-          { x: new Date(2020, 2, 6),y: 8 },
-          { x: new Date(2020, 2, 13),y: 32 },
-          { x: new Date(2020, 2, 22),y: 256 },
-          { x: new Date(2020, 2, 29),y: 1200 },
-          { x: new Date(2020, 3, 6),y: 1400 },
+          { x: new Date(20200421),y: 1 , indexLabel: "-first case",  markerType: "cross" },
+          { x: new Date(20200422),y: 2 },
+          { x: new Date(20200423),y: 4 },
+          { x: new Date(20200424),y: 8 },
+          { x: new Date(20200425),y: 32 },
+          { x: new Date(20200426),y: 256 },
+          { x: new Date(20200427),y: 1200 },
+          { x: new Date(20200429),y: 1400 },
         ]
       },
-      {        
-        type: "line",
-        name: "State #2",
-        lineThickness: 1,
-        color: "blue",
-        lineColor: 'blue',
-        indexLabelOrientation:"vertical",
-        indexLabelFontColor:"blue",
-        markerColor: "blue",
-        showInLegend: true,
-        indexLabelFontSize: 12,
-        dataPoints: [
-          { x: new Date(2020, 1, 10), y: 1 , indexLabel: "-first case", markerType: "cross" },
-          { x: new Date(2020, 1, 22),y: 2 },
-          { x: new Date(2020, 1, 29),y: 3 },
-          { x: new Date(2020, 2, 6),y: 6 },
-          { x: new Date(2020, 2, 13),y: 25 },
-          { x: new Date(2020, 2, 22),y: 60},
-          { x: new Date(2020, 2, 29),y: 55 },
-          { x: new Date(2020, 3, 6),y: 55 },
-        ]
-      }
       ],
     });
     InfectionRate.render();
@@ -109,28 +91,6 @@ export class Chart {
           { x: new Date(2020, 3, 6),y: 20000 },
         ]
       },
-      {        
-        type: "line",
-        name: "State #2",
-        lineThickness: 1,
-        color: "blue",
-        lineColor: 'blue',
-        indexLabelOrientation:"vertical",
-        indexLabelFontColor:"blue",
-        markerColor: "blue",
-        showInLegend: true,
-        indexLabelFontSize: 12,
-        dataPoints: [
-          { x: new Date(2020, 1, 10), y: 50 , indexLabel: "-testing begins", markerType: "cross" },
-          { x: new Date(2020, 1, 22),y: 150 },
-          { x: new Date(2020, 1, 29),y: 300 },
-          { x: new Date(2020, 2, 6),y: 500 },
-          { x: new Date(2020, 2, 13),y: 1100 },
-          { x: new Date(2020, 2, 22),y: 3200},
-          { x: new Date(2020, 2, 29),y: 4330 },
-          { x: new Date(2020, 3, 6),y: 5000 },
-        ]
-      }
       ],
     });
     testRate.render();
@@ -176,28 +136,6 @@ export class Chart {
           { x: new Date(2020, 3, 6),y: 20000 },
         ]
       },
-      {        
-        type: "line",
-        name: "State #2",
-        lineThickness: 1,
-        color: "blue",
-        lineColor: 'blue',
-        indexLabelOrientation:"vertical",
-        indexLabelFontColor:"blue",
-        markerColor: "blue",
-        showInLegend: true,
-        indexLabelFontSize: 12,
-        dataPoints: [
-          { x: new Date(2020, 1, 10), y: 50 , indexLabel: "-testing begins", markerType: "cross" },
-          { x: new Date(2020, 1, 22),y: 150 },
-          { x: new Date(2020, 1, 29),y: 300 },
-          { x: new Date(2020, 2, 6),y: 500 },
-          { x: new Date(2020, 2, 13),y: 1100 },
-          { x: new Date(2020, 2, 22),y: 3200},
-          { x: new Date(2020, 2, 29),y: 4330 },
-          { x: new Date(2020, 3, 6),y: 5000 },
-        ]
-      }
       ],
     });
     positiveTestChart.render();

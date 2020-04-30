@@ -1,25 +1,42 @@
 body {
   background-color: #efefef;
   background-image: url(../img/white_carbonfiber.jpg);
-  font-family: Roboto;
+  /* font-family: Roboto; */
 }
 
 h1 {
   text-align: center;
   text-decoration: underline;
-  font-family: Source Serif Pro;
+  font-family: Impact;
   color: black;
   font-size: 80px;
   padding-top: 30px;
   padding-bottom: 35px;
   background-color:rgba(255, 0, 0, 0.384);
 }
-/* .well {
-  display: none;
-} */
+
+.card {
+  background-color: #f8f8f8bb;
+  border-style: inset;
+  margin: 15px;
+  padding-bottom: 10px;
+}
+
+#datastyles1 {
+  padding-left: 25px;
+  padding-top: 20px;
+  text-decoration: underline;
+}
+
+#datastyles2 {
+  padding-left: 25px;
+  text-decoration: underline;
+}
 
 #left, #right {
-  background-color:rgba(255, 0, 0, 0.384);
+  /* background-color:rgba(255, 0, 0, 0.384); */
+  background-image: linear-gradient(to bottom, #de0000, #f2426c, #e57db1, #d0aed3, #d3d3d3);
+  opacity: .4;
 	position: fixed;
 	}
 	#left, #right {
