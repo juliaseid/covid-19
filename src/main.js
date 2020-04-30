@@ -147,8 +147,8 @@ $(document).ready(function () {
     let stateHistoricalData = stateService.historicalData.filter(state => state.fips === stateId);
     let histData = new HistoricalDataByState(stateHistoricalData);
     histData.getDeathsOverTime();
-    console.log(histData.deathsOverTime);
-    let chart = new Chart(histData.deathsOverTime);
+    let chart = new Chart(histData.removeUndefined(histData.deathsOverTime));
+    console.log(chart.deathOverTimeData);
     chart.infectionChart();
     chart.testRateChart();
     chart.positiveTestChart();

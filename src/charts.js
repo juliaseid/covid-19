@@ -1,11 +1,21 @@
 import CanvasJS from './canvasjs.min.js';
   
 export class Chart {
-  constructor(deathOverTimeData) {
+  constructor(deathOverTimeData, positiveOverTimeData) {
     this.deathOverTimeData = deathOverTimeData;
+    this.positiveOverTimeData = positiveOverTimeData;
   }
 
   infectionChart() {
+
+    let dataPoint = this.deathOverTimeData.map(obj => {
+      return {
+        x: obj.date,
+        y: obj.deaths
+      };
+    });
+
+
     var InfectionRate = new CanvasJS.Chart("infectionRateChart", {
       animationEnabled: true,
       theme: "light1",
@@ -35,23 +45,16 @@ export class Chart {
         lineColor: 'red',
         showInLegend: true,
         indexLabelFontSize: 12,
-        dataPoints: [
-          { x: new Date(20200421),y: 1 , indexLabel: "-first case",  markerType: "cross" },
-          { x: new Date(20200422),y: 2 },
-          { x: new Date(20200423),y: 4 },
-          { x: new Date(20200424),y: 8 },
-          { x: new Date(20200425),y: 32 },
-          { x: new Date(20200426),y: 256 },
-          { x: new Date(20200427),y: 1200 },
-          { x: new Date(20200429),y: 1400 },
-        ]
-      },
-      ],
+        dataPoints: dataPoint
+      }
+      ]
     });
     InfectionRate.render();
   }
 
   testRateChart() {
+
+    
     var testRate = new CanvasJS.Chart("testingChart", {
       animationEnabled: true,
       theme: "light1",
@@ -97,6 +100,13 @@ export class Chart {
   }
 
   positiveTestChart() {
+
+    let dataPoint = this.positiveOverTimeData.map(obj => {
+      return {
+        x: obj.date,
+        y: obj.positive
+      };
+    });
     var positiveTestChart = new CanvasJS.Chart("positiveTestChart", {
       animationEnabled: true,
       theme: "light1",
@@ -125,18 +135,9 @@ export class Chart {
         indexLabelFontColor:"red",
         showInLegend: true,
         indexLabelFontSize: 12,
-        dataPoints: [
-          { x: new Date(2020, 1, 15), y: 5 , indexLabel: "-testing begins", markerType: "cross" },
-          { x: new Date(2020, 1, 22),y: 20 },
-          { x: new Date(2020, 1, 29),y: 200 },
-          { x: new Date(2020, 2, 6),y: 500 },
-          { x: new Date(2020, 2, 13),y: 1500 },
-          { x: new Date(2020, 2, 22),y: 4500 },
-          { x: new Date(2020, 2, 29),y: 10000 },
-          { x: new Date(2020, 3, 6),y: 20000 },
-        ]
-      },
-      ],
+        dataPoints: dataPoint
+      }
+      ]
     });
     positiveTestChart.render();
   }
