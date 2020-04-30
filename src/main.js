@@ -53,10 +53,31 @@ function getStatePopulation(census) {
 }
 
 function displayNationalData(obj) {
+  $('.ttlNatPopulation').text(obj.totalPopulation);
+  $('.ttlNationalTests').text(obj.totalTests);
   $('.ttlNationalInfections').text(obj.totalCases);
   $('.ttlNationalDead').text(obj.totalDead);
   $('.ttlNationalRecovered').text(obj.totalRecovered);
-  $('.ttlNationalTests').text(obj.totalTests);
+  $('.natTestRate').text(obj.testsPer100K(obj.totalTests, obj.totalPopulation));
+  $('.natInfectionRate').text(obj.casesPer100K(obj.totalCases, obj.totalPopulation));
+  $('.natPosTestPerc').text(obj.positivesPer100Tests(obj.totalCases, obj.totalTests));
+  $('.natRecoveryRate').text(obj.recoveredPerConfirmed(obj.totalRecovered, obj.totalCases));
+  $('.natDeathRate').text(obj.deathsPerConfirmed(obj.totalDead, obj.totalCases));
+  $('.natActiveCases').text(obj.activeCases(obj.totalCases, obj.totalDead, obj.totalRecovered));
+}
+
+function displayStateData(statePackage){
+  $('.ttlStatePopulation').text(statePackage.totalPopulation);
+  $('.ttlStateTests').text(statePackage.totalTests);
+  $('.ttlStateInfections').text(statePackage.totalCases);
+  $('.ttlStateDead').text(statePackage.totalDead);
+  $('.ttlStateRecovered').text(statePackage.totalRecovered);
+  $('.ttlStateTestRate').text(statePackage.testsPer100K(statePackage.totalTests, statePackage.totalPopulation ));
+  $('.ttlStateInfectionRate').text(statePackage.casesPer100K(statePackage.totalCases, statePackage.totalPopulation));
+  $('.ttlStatePosTestPercentage').text(statePackage.positivesPer100Tests(statePackage.totalCases, statePackage.totalTests));
+  $('.ttlStateRecoveryRate').text(statePackage.recoveredPerConfirmed(statePackage.totalRecovered, statePackage.totalCases));
+  $('.ttlStateDeathRate').text(statePackage.deathsPerConfirmed(statePackage.totalDead, statePackage.totalCases)); 
+  $('.stateActiveCases').text(statePackage.activeCases(statePackage.totalCases, statePackage.totalRecovered, statePackage.totalDead));
 }
 
 $(document).ready(function () {
@@ -84,23 +105,14 @@ $(document).ready(function () {
       allStatesDataPackages.push(stateDataPackage);
       //allStatesDataPackages is an array of arrays, one for each state or territory.  Within each state array are 2 elements: an object in the same format as nationalData (key:value pairs with the values as numbers), and the FIPS code for that state as a string
     });
-   
-    console.log(`FOOOOOOOO` , nationalData);
-    console.log(`BAAAAAAAARRR` , allStatesDataPackages);
-
-    console.log(nationalData);
     displayNationalData(nationalData);
-    // console.log(stateData);
   })();
 
-  
-  
   let map = L.map('map').setView([37.8, -96], 4);
   let geoJsonLayer;
   let info = L.control();
   let stateService = new StateService();
   
-
   L.tileLayer(`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=${process.env.ACCESS_TOKEN}`, {
     maxZoom: 6,
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
@@ -138,18 +150,15 @@ $(document).ready(function () {
 
   function highlightFeature(e) {
     let layer = e.target;
-
     layer.setStyle({
       weight: 5,
       color: '#000',
       dashArray: '',
       fillOpacity: 0.7
     });
-
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
       layer.bringToFront();
     }
-
     info.update(layer.feature.properties);
   }
 
@@ -171,25 +180,23 @@ $(document).ready(function () {
 
   function getStateDataByID(e) {
     let stateId = e.target.feature.id;
+    let stateName = e.target.feature.properties.name;
     let stateHistoricalData = stateService.historicalData.filter(state => state.fips === stateId);
     let histData = new HistoricalDataByState(stateHistoricalData);
     histData.getDeathsOverTime();
     histData.getTestsOverTime();
-    let chart = new Chart(histData.deathsOverTime, histData.testsOverTime);
-    console.log(chart.deathOverTimeData);
+    let chart = new Chart(histData.deathsOverTime, histData.testsOverTime, stateName);
     chart.infectionChart();
     chart.testRateChart();
     chart.positiveTestChart();
     let stateCurrentData = [];
     //the first value in the census API is a header, so the loop skips the first element
     for (let i=1; i<allStatesDataPackages.length; i++) {
-      console.log(allStatesDataPackages);
       if (allStatesDataPackages[i][1] === stateId) {
-        stateCurrentData.push(allStatesDataPackages[i]);
+        stateCurrentData = allStatesDataPackages[i];
       }
     }
-    console.log(stateCurrentData);
-
+    displayStateData(stateCurrentData[0]);
   }
 
   function onEachFeature(feature, layer) {
@@ -203,11 +210,9 @@ $(document).ready(function () {
   function createLegend() {
     let legend = L.control({position: 'bottomright'});
     legend.onAdd = function (map) {
-
       let div = L.DomUtil.create('div', 'info legend'),
         grades = [0, 100, 5000, 10000, 15000, 20000, 25000],
         labels = [];
-      
       for (let i = 0; i < grades.length; i++) {
         div.innerHTML += 
         '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
@@ -215,7 +220,6 @@ $(document).ready(function () {
       }
       return div;
     };
-
     legend.addTo(map);
   }
 
