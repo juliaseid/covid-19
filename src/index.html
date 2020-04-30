@@ -14,7 +14,6 @@
         <!-- Map goes here -->
       </div>
     </div>
-
     <!-- COLUMN for simple data that doesn't need a graph, ie number of infections, current infection rate etc-->
     <div class="row">
       <div class="col-md-4">
@@ -22,10 +21,17 @@
           <div id="nationalData">
             <h3 id="datastyles1">National Data</h3>
             <ul>
-              <li id="nationalInfections">Total Number of U.S. Cases: <span class="ttlNationalInfections"></span></li>
+              <li id="nationalPopulation">Population: <span class="ttlNatPopulation"></span></li>
+              <li id="nationalTests">Total Tests: <span class="ttlNationalTests"></span></li>
+              <li id="nationalInfections">Total U.S. Cases: <span class="ttlNationalInfections"></span></li>
               <li id="nationalDeath">Total Dead: <span class="ttlNationalDead"></span></li>
               <li id="nationalRecovered">Total Recovered: <span class="ttlNationalRecovered"></span></li>
-              <li id="nationalTests">Total Tests: <span class="ttlNationalTests"></span></li>
+              <li id="nationalTestRate">Per 100K People: <span class="natTestRate"></span> Tests</li>
+              <li id="nationalInfectionRate">Per 100K People: <span class="natInfectionRate"></span> Cases</li>
+              <li id="nationalPosTestPercentage">Positive Test Rate: <span class="natPosTestPerc"></span>%</li>
+              <li id="nationalRecovery">Recovery Rate for Confirmed Cases: <span class="natRecoveryRate"></span>%</li>
+              <li id="nationalDeathRate">Death Rate for Confirmed Cases: <span class="natDeathRate"></span>%</li>
+              <li id="nationalActiveCases">Active Confirmed Cases: <span class="natActiveCases"></span>%</li>
             </ul>
           </div>
           <hr class="my-4">
@@ -33,39 +39,42 @@
             <h3 id="datastyles2">State Data</h3>
             <div id="putDataHere"></div>
             <ul>
-              <li id="stateInfections">Total Number of Cases in State:</li>
-              <li id="stateInfectionRate">State Infection Rate:</li>
+              <li id="statePopulation">State Population: <span class="ttlStatePopulation"></span></li>
+              <li id="stateTests">Total Tests in State: <span class="ttlStateTests"></span></li>
+              <li id="stateInfections">Total Cases in State: <span class="ttlStateInfections"></span></li>
+              <li id="stateDeath">Total Dead in State: <span class="ttlStateDead"></span></li>
+              <li id="stateRecovered">Total Recovered in State: <span class="ttlStateRecovered"></span></li>
+              <li id="stateTestRate">Per 100K People: <span class="ttlStateTestRate"></span> Tests</li>
+              <li id="stateInfectionRate">Per 100K People: <span class="ttlStateInfectionRate"></span> Cases</li>
+              <li id="statePosTestPercentage">Tests Per 100K People: <span class="ttlStatePosTestPercentage"></span>%</li>
+              <li id="stateRecoveryRate">State Recovery Rate: <span class="ttlStateRecoveryRate"></span>%</li>
+              <li id="stateDeathRate">State Death Rate: <span class="ttlStateDeathRate"></span>%</li>
+              <li id="stateActiveCases">Active Confirmed Cases: <span class="stateActiveCases"></span>%</li>
             </ul>
           </div>
         </div>
       </div>
     <br>
-
       <!-- GRAPHS -->
       <div class="col-md-8">
         <div class="graphBox" id="graph1">
-          <h3 id="graphstyle">GRAPH 1 HERE</h3>
+          <h3 id="graphstyle"></h3>
           <div id="infectionRateChart" style="height: 300px; width: 100%;"></div>
         </div>
         <hr class="my-4">
         <div class="graphBox" id="graph2">
-          <h3>GRAPH 2 HERE</h3>
           <div id="testingChart" style="height: 300px; width: 100%;"></div>
         </div>
         <hr class="my-4">
         <div class="graphBox" id="graph3">
-          <h3>GRAPH 3 HERE</h3>
           <div id="positiveTestChart" style="height: 300px; width: 100%;"></div>
         </div>
       </div>
     </div>  <!--   -->
   <br>
-
-    
     <!-- CSS Styling divs below -->
     <div id="left"></div>
     <div id="right"></div>
-
   </div>
 </body>
 </html>

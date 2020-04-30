@@ -32,4 +32,9 @@ export class DataFunctions {
     let gotDead = +(((totalDead/totalCases)*100).toFixed());
     return gotDead;
   }
+
+  activeCases (totalCases, totalRecovered, totalDead) {
+    let notSure = +(((totalCases-totalRecovered-totalDead)/totalCases*100).toFixed());
+    return notSure;
+  }
 }

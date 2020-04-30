@@ -1,13 +1,13 @@
 import CanvasJS from './canvasjs.min.js';
   
 export class Chart {
-  constructor(deathOverTimeData, positiveOverTimeData) {
+  constructor(deathOverTimeData, positiveOverTimeData, stateName) {
     this.deathOverTimeData = deathOverTimeData;
     this.positiveOverTimeData = positiveOverTimeData;
+    this.stateName = stateName;
   }
 
   infectionChart() {
-
     let dataPoint = this.deathOverTimeData.map(obj => {
       return {
         x: new Date(obj.date),
@@ -15,11 +15,13 @@ export class Chart {
       };
     });
 
+    
+    
 
     var InfectionRate = new CanvasJS.Chart("infectionRateChart", {
       animationEnabled: true,
       theme: "light1",
-      backgroundColor: 'lightgrey',
+      backgroundColor: 'white',
       title:{
         text: "Total Deaths Over Time",
         fontFamily: "tahoma",
@@ -35,7 +37,7 @@ export class Chart {
       },
       data: [{        
         type: "line",
-        name: "State #1",
+        name: this.stateName,
         lineThickness: 1,
         markerType: "triangle",
         markerColor: "red",
@@ -53,12 +55,10 @@ export class Chart {
   }
 
   testRateChart() {
-
-    
     var testRate = new CanvasJS.Chart("testingChart", {
       animationEnabled: true,
       theme: "light1",
-      backgroundColor: 'lightgrey',
+      backgroundColor: 'white',
       title:{
         text: "Testing Rate Over Time",
         fontFamily: "tahoma",
@@ -74,7 +74,7 @@ export class Chart {
       },
       data: [{        
         type: "line",
-        name: "State #1",
+        name: this.stateName,
         lineThickness: 1,
         color: "red",
         lineColor: 'red',
@@ -101,7 +101,6 @@ export class Chart {
   }
 
   positiveTestChart() {
-
     let dataPoint = this.positiveOverTimeData.map(obj => {
       return {
         x: new Date(obj.date),
@@ -127,7 +126,7 @@ export class Chart {
       },
       data: [{        
         type: "line",
-        name: "State #1",
+        name: this.stateName,
         lineThickness: 1,
         color: "red",
         lineColor: 'red',
@@ -143,7 +142,6 @@ export class Chart {
     });
     positiveTestChart.render();
   }
-
 }
 
 
