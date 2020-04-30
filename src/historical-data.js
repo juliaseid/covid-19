@@ -2,6 +2,7 @@ export class HistoricalDataByState {
   constructor(jsonData) {
     this.jsonData = jsonData;
     this.deathsOverTime;
+    this.testsOverTime;
   }
 
   getDeathsOverTime() {
@@ -13,9 +14,18 @@ export class HistoricalDataByState {
     });
   }
 
-  /* removeUndefined(obj) {
+  getTestsOverTime() {
+    this.testsOverTime = this.jsonData.map(state => {
+      return {
+        date: state.date,
+        positive: state.positive 
+      };
+    });
+  }
+
+  removeUndefined(obj) {
     return obj.filter(e => e.deaths !== undefined);
-  } */
+  } 
 
   /* callAllMethods() {
     this.getDeathsOverTime();

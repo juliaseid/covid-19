@@ -52,6 +52,13 @@ function getStatePopulation(census) {
   //returns a single number
 }
 
+function displayNationalData(obj) {
+  $('.ttlNationalInfections').text(obj.totalCases);
+  $('.ttlNationalDead').text(obj.totalDead);
+  $('.ttlNationalRecovered').text(obj.totalRecovered);
+  $('.ttlNationalTests').text(obj.totalTests);
+}
+
 $(document).ready(function () {
   const allStatesDataPackages = [];
   (async () => {
@@ -81,6 +88,9 @@ $(document).ready(function () {
     console.log(`FOOOOOOOO` , nationalData);
     console.log(`BAAAAAAAARRR` , allStatesDataPackages);
 
+    console.log(nationalData);
+    displayNationalData(nationalData);
+    // console.log(stateData);
   })();
 
   
@@ -89,7 +99,6 @@ $(document).ready(function () {
   let geoJsonLayer;
   let info = L.control();
   let stateService = new StateService();
-  let chart = new Chart();
   
 
   L.tileLayer(`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=${process.env.ACCESS_TOKEN}`, {
@@ -102,9 +111,9 @@ $(document).ready(function () {
     zoomOffset: -1
   }).addTo(map);
 
-  function style() {
+  function style(feature) {
     return {
-      fillColor: 'red',
+      fillColor: getColor(feature.properties.totalCases),
       weight: 2,
       opacity: 1, 
       color: 'white',
@@ -149,14 +158,28 @@ $(document).ready(function () {
     info.update();
   }
 
+  function getColor(cases) {
+    return cases > 25000 ? '#800026' :
+           cases > 20000  ? '#BD0026' :
+           cases > 15000  ? '#E31A1C' :
+           cases > 10000  ? '#FC4E2A' :
+           cases > 5000   ? '#FD8D3C' :
+           cases > 1000   ? '#FEB24C' :
+           cases > 100   ? '#FED976' :
+                           '#FFEDA0';
+  }
+
   function getStateDataByID(e) {
     let stateId = e.target.feature.id;
-    const allhistoricalData = stateService.historicalData;
-    let stateHistoricalData = allhistoricalData.filter(state => state.fips === stateId);
+    let stateHistoricalData = stateService.historicalData.filter(state => state.fips === stateId);
     let histData = new HistoricalDataByState(stateHistoricalData);
     histData.getDeathsOverTime();
-    console.log(histData.deathsOverTime);
+    histData.getTestsOverTime();
+    let chart = new Chart(histData.deathsOverTime, histData.testsOverTime);
+    console.log(chart.deathOverTimeData);
     chart.infectionChart();
+    chart.testRateChart();
+    chart.positiveTestChart();
     let stateCurrentData = [];
     //the first value in the census API is a header, so the loop skips the first element
     for (let i=1; i<allStatesDataPackages.length; i++) {
@@ -177,6 +200,25 @@ $(document).ready(function () {
     });
   }
 
+  function createLegend() {
+    let legend = L.control({position: 'bottomright'});
+    legend.onAdd = function (map) {
+
+      let div = L.DomUtil.create('div', 'info legend'),
+        grades = [0, 100, 5000, 10000, 15000, 20000, 25000],
+        labels = [];
+      
+      for (let i = 0; i < grades.length; i++) {
+        div.innerHTML += 
+        '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+         grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+      }
+      return div;
+    };
+
+    legend.addTo(map);
+  }
+
   (async () => {
     await stateService.populateStateData();
     await stateService.setHisotricalStateData();
@@ -184,6 +226,7 @@ $(document).ready(function () {
       style: style,
       onEachFeature: onEachFeature
     }).addTo(map);
+    createLegend();
     
   })();
 

@@ -1,25 +1,55 @@
 body {
   background-color: #efefef;
   background-image: url(../img/white_carbonfiber.jpg);
-  font-family: Roboto;
+  /* font-family: Roboto; */
 }
 
 h1 {
   text-align: center;
   text-decoration: underline;
-  font-family: Source Serif Pro;
+  font-family: Impact;
   color: black;
   font-size: 80px;
   padding-top: 30px;
   padding-bottom: 35px;
   background-color:rgba(255, 0, 0, 0.384);
 }
-/* .well {
-  display: none;
-} */
+
+#mapBorder {
+  border-style: ridge;
+  border-color: rgba(0, 0, 0, 0.493);
+  border-width: 1px;
+}
+
+.card {
+  background-color: #f8f8f8bb;
+  border-style: inset;
+  margin: 15px;
+  margin-top: 20px;
+  padding-bottom: 10px;
+  border-style: ridge;
+  border-color: rgba(0, 0, 0, 0.479);
+}
+
+#datastyles1 {
+  padding-left: 25px;
+  padding-top: 20px;
+  text-decoration: underline;
+}
+
+#datastyles2 {
+  padding-left: 25px;
+  text-decoration: underline;
+}
+
+#graphstyle {
+  margin-top: 15px;
+}
 
 #left, #right {
-  background-color:rgba(255, 0, 0, 0.384);
+  /* background-color:rgba(255, 0, 0, 0.384); */
+  background-image: linear-gradient(to bottom, #de0000, #ee3a3a, #d84659, #d0aed3, #d3d3d3);
+  opacity: .4;
 	position: fixed;
 	}
 	#left, #right {
@@ -31,7 +61,6 @@ h1 {
     
 #map {
   height: 500px;
-  margin-top: 40px;
 }
 
 .info {
@@ -45,4 +74,16 @@ h1 {
 .info h4 {
   margin: 0 0 5px;
   color: #777;
+}
+
+.legend {
+  line-height: 18px;
+  color: #555;
+}
+.legend i {
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin-right: 8px;
+  opacity: 0.7;
 }
