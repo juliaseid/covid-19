@@ -18,11 +18,12 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('./../src/leaflet/images/marker-shadow.png'),
 });
 
-function getCOVIDElements (response1, response2) { 
+function getCOVIDElements (response1, population) { 
+  //takes in JSON object from COVID tracking API and a number as population
   let dataFunctions;
   if (response1) {
-    if (response2) {
-      dataFunctions = new DataFunctions(response1[0].positive, response1[0].recovered, response1[0].death, response1[0].totalTestResults, getPopulations(response2));
+    if (population) {
+      dataFunctions = new DataFunctions(response1[0].positive, response1[0].recovered, response1[0].death, response1[0].totalTestResults, population);
     }
     else {
       dataFunctions = "Sorry, no population data available!";
@@ -32,30 +33,54 @@ function getCOVIDElements (response1, response2) {
     dataFunctions = "We're sorry!  We have nothing to show you right now!";
   }
   return dataFunctions;
+  //returns object w/ properties of cases, recovered, deaths, tests, and population, each as a number.  Object prototype has mathematical operations to generate rates of infection, etc.
 }
 
-function getPopulations (response) {
-  let totalNationalPop;
+function getNationalPopulation(response) {
+  let totalNatPop;
   if (response) {
-    totalNationalPop = response[1][0];
+    totalNatPop = response[1][0];
   }
-  return +(totalNationalPop);
+  return +(totalNatPop);
+  //returns a single number
+}
+
+function getStatePopulation(census) {
+  let totalStatePop;
+  totalStatePop = census[0];
+  return +(totalStatePop);
+  //returns a single number
 }
 
 $(document).ready(function () {
+  const allStatesDataPackages = [];
   (async () => {
     let covidService = new COVIDService;
     let populationService = new PopulationService;
     const popResponse = await populationService.getNationalPopulationData();
-    const statePopResponse = await populationService.getStatePopulationData();
+    //popResponse for national data is an array of 2 objects, the first being an index, the second being the total population
+    const allStatesPopResponse = await populationService.getStatePopulationData();
+    //allStatesPopResponse is an array of objects in key:value pairs of population:fips where both key and value are strings
     const nationalResponse = await covidService.getNationalData();
-    const stationalResponse = await covidService.getStateData();
-    let nationalData = getCOVIDElements(nationalResponse, popResponse);
-    //let stateCOVID = stationalResponse.filter(state => state.fips === stateId)//needs to be amended to work w/ specifics of our API & stuff
-    //let statePop = statePopResponse.filter( blah blah => )//fix this
+    //covidService is an object with an array of key:value pairs of various data points; we access selected data points only and save them as nationalResponse
+    const allStatesCOVIDResponse = await covidService.getStateData();
+    //allStatesCOVIDResponse is an array of arrays, one for each state or territory, each containing key:value pairs
+    let nationalData = getCOVIDElements(nationalResponse, getNationalPopulation(popResponse));
+    //nationalData containes the relevant data points from covidService along with the total population, saved as an object containing key:value pairs, where each value is a number
+    allStatesPopResponse.forEach(census => { 
+      let stateDataPackage;
+      allStatesCOVIDResponse.forEach(state => {
+        if (state["fips"]===census[1]) {
+          stateDataPackage = [getCOVIDElements([state], getStatePopulation(census)), state["fips"]];
+        }
+      });
+      allStatesDataPackages.push(stateDataPackage);
+      //allStatesDataPackages is an array of arrays, one for each state or territory.  Within each state array are 2 elements: an object in the same format as nationalData (key:value pairs with the values as numbers), and the FIPS code for that state as a string
+    });
+   
+    console.log(`FOOOOOOOO` , nationalData);
+    console.log(`BAAAAAAAARRR` , allStatesDataPackages);
 
-    console.log(nationalData);
-    console.log(stateData);
   })();
 
   
@@ -132,6 +157,16 @@ $(document).ready(function () {
     histData.getDeathsOverTime();
     console.log(histData.deathsOverTime);
     chart.infectionChart();
+    let stateCurrentData = [];
+    //the first value in the census API is a header, so the loop skips the first element
+    for (let i=1; i<allStatesDataPackages.length; i++) {
+      console.log(allStatesDataPackages);
+      if (allStatesDataPackages[i][1] === stateId) {
+        stateCurrentData.push(allStatesDataPackages[i]);
+      }
+    }
+    console.log(stateCurrentData);
+
   }
 
   function onEachFeature(feature, layer) {
