@@ -7,8 +7,6 @@ export class StateService {
     this.historicalData;
   }
   
-  
-  
   async getStatesData() {
     try {
       let response = await fetch("https://covidtracking.com/api/v1/states/current.json");
@@ -53,5 +51,4 @@ export class StateService {
     const response = await this.getHistoricalStateData();
     this.historicalData = response;
   }
-      
 }
