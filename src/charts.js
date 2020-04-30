@@ -100,7 +100,7 @@ export class Chart {
     var positiveTestChart = new CanvasJS.Chart("positiveTestChart", {
       animationEnabled: true,
       theme: "light1",
-      backgroundColor: 'lightgrey',
+      backgroundColor: 'white',
       title:{
         text: "Positive Tests Over Time",
         fontFamily: "tahoma",
