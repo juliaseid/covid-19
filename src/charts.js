@@ -10,7 +10,7 @@ export class Chart {
 
     let dataPoint = this.deathOverTimeData.map(obj => {
       return {
-        x: obj.date,
+        x: new Date(obj.date),
         y: obj.deaths
       };
     });
@@ -66,6 +66,7 @@ export class Chart {
       axisX:{
         title: "Date",
         intervalType: "month",
+        valueFormatString: "YYYY-MM-DD",
       },
       axisY:{
         title: "Tests Per 100,000",
@@ -103,7 +104,7 @@ export class Chart {
 
     let dataPoint = this.positiveOverTimeData.map(obj => {
       return {
-        x: obj.date,
+        x: new Date(obj.date),
         y: obj.positive
       };
     });
@@ -112,12 +113,13 @@ export class Chart {
       theme: "light1",
       backgroundColor: 'white',
       title:{
-        text: "Positive Tests Over Time",
+        text: "Total Positive Tests",
         fontFamily: "tahoma",
       },
       axisX:{
         title: "Date",
         intervalType: "month",
+        valueFormatString: "YYYY-MM-DD",
       },
       axisY:{
         title: "Positive Tests Per 100,000",
