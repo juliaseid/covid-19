@@ -15,11 +15,20 @@ h1 {
   background-color:rgba(255, 0, 0, 0.384);
 }
 
+#mapBorder {
+  border-style: ridge;
+  border-color: rgba(0, 0, 0, 0.493);
+  border-width: 1px;
+}
+
 .card {
   background-color: #f8f8f8bb;
   border-style: inset;
   margin: 15px;
+  margin-top: 20px;
   padding-bottom: 10px;
+  border-style: ridge;
+  border-color: rgba(0, 0, 0, 0.479);
 }
 
 #datastyles1 {
@@ -33,9 +42,13 @@ h1 {
   text-decoration: underline;
 }
 
+#graphstyle {
+  margin-top: 15px;
+}
+
 #left, #right {
   /* background-color:rgba(255, 0, 0, 0.384); */
-  background-image: linear-gradient(to bottom, #de0000, #f2426c, #e57db1, #d0aed3, #d3d3d3);
+  background-image: linear-gradient(to bottom, #de0000, #ee3a3a, #d84659, #d0aed3, #d3d3d3);
   opacity: .4;
 	position: fixed;
 	}
@@ -48,7 +61,6 @@ h1 {
     
 #map {
   height: 500px;
-  margin-top: 40px;
 }
 
 .info {
@@ -62,4 +74,16 @@ h1 {
 .info h4 {
   margin: 0 0 5px;
   color: #777;
+}
+
+.legend {
+  line-height: 18px;
+  color: #555;
+}
+.legend i {
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin-right: 8px;
+  opacity: 0.7;
 }
