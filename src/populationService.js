@@ -10,7 +10,6 @@ export class PopulationService {
       }
       return jsonifiedStatePopResponse;
     } catch (error) {
-      console.log("in the catch");
       return false;
     } 
   }
@@ -26,7 +25,6 @@ export class PopulationService {
       }
       return jsonifiedNationalPopResponse;
     } catch (error) {
-      console.log("in the catch");
       return false;
     } 
   }
